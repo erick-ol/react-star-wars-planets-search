@@ -5,8 +5,16 @@ import useFetch from '../hooks/useFetch';
 export const GlobalContext = React.createContext();
 
 const GlobalStorage = ({ children }) => {
-  const [planets, setPlanets] = useState([]);
   const { request, data } = useFetch();
+  const [planets, setPlanets] = useState([]);
+  const [filter, setFilter] = useState({
+    filters: {
+      filterByName: {
+        name: '',
+      },
+      filterByNumericValues: [],
+    },
+  });
 
   useEffect(() => {
     request('https://swapi-trybe.herokuapp.com/api/planets/?format=json');
@@ -20,6 +28,8 @@ const GlobalStorage = ({ children }) => {
 
   const value = {
     planets,
+    filter,
+    setFilter,
   };
 
   return (
