@@ -5,6 +5,7 @@ const Row = () => {
   const [filteredPlanets, setFilteredPlanets] = useState(null);
   const { filter, planets } = useContext(GlobalContext);
   const { name } = filter.filters.filterByName;
+  const { filterByNumericValues: filterNum } = filter.filters;
 
   useEffect(() => {
     if (planets) {
@@ -12,6 +13,34 @@ const Row = () => {
       setFilteredPlanets(aux);
     }
   }, [planets, name]);
+
+  useEffect(() => {
+    if (filterNum.length > 0) {
+      let aux = planets;
+      filterNum.forEach((e) => {
+        switch (e.comparison) {
+        case 'maior que':
+          aux = aux.filter((planet) => (
+            Number(planet[e.column]) > Number(e.value) && planet[e.column] !== 'unknown'
+          ));
+          break;
+        case 'menor que':
+          aux = aux.filter((planet) => (
+            Number(planet[e.column]) < Number(e.value) && planet[e.column] !== 'unknown'
+          ));
+          break;
+        case 'igual a':
+          aux = aux.filter((planet) => (
+            Number(planet[e.column]) === Number(e.value)
+          ));
+          break;
+        default:
+          break;
+        }
+      });
+      setFilteredPlanets(aux);
+    }
+  }, [filterNum]);
 
   return (
     <>
@@ -43,7 +72,7 @@ const Row = () => {
             <td>films</td>
             <td>created</td>
             <td>edited</td>
-            <td><a href={ url } target="_blank" rel="noreferrer">API</a></td>
+            <td><a href={ url } target="_blank" rel="noopener noreferrer">API</a></td>
           </tr>
         );
       })}
