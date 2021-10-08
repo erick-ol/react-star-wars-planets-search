@@ -8,7 +8,7 @@ const Row = () => {
   const { filterByNumericValues: filterNum, order } = filter.filters;
 
   useEffect(() => {
-    if (planets) {
+    if (filter) {
       if (order.sort === 'ASC') {
         if (order.column === 'name') {
           setFilteredPlanets(
@@ -32,7 +32,7 @@ const Row = () => {
         }
       }
     }
-  }, [order, planets]);
+  }, [filter, planets]);
 
   useEffect(() => {
     if (planets) {

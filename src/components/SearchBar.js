@@ -39,7 +39,7 @@ const SearchBar = () => {
     e.preventDefault();
     setFilter({ filters: {
       ...filter.filters,
-      sort: {
+      order: {
         column: columnOrd,
         sort: orderRadio,
       },

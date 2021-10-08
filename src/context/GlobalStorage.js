@@ -7,16 +7,17 @@ export const GlobalContext = React.createContext();
 const GlobalStorage = ({ children }) => {
   const { request, data } = useFetch();
   const [planets, setPlanets] = useState([]);
+  const [aux, setAux] = useState(false);
   const [filter, setFilter] = useState({
     filters: {
       filterByName: {
         name: '',
       },
-      filterByNumericValues: [],
       order: {
         column: 'name',
         sort: 'ASC',
       },
+      filterByNumericValues: [],
     },
   });
 
@@ -34,6 +35,8 @@ const GlobalStorage = ({ children }) => {
     planets,
     filter,
     setFilter,
+    aux,
+    setAux,
   };
 
   return (
