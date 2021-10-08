@@ -5,21 +5,21 @@ const SearchBar = () => {
   const { setFilter, filter } = useContext(GlobalContext);
   const [name, setName] = useState('');
   const [column, setColumn] = useState('population');
+  const [columnOrd, setColumnOrd] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState('');
   const [columnArray, setColumnArray] = useState('');
+  const [orderRadio, setOrderRadio] = useState('ASC');
 
   useEffect(() => {
     setFilter({ filters: { ...filter.filters, filterByName: { name } } });
-  }, [name]);
+  }, [name, setFilter]);
 
   useEffect(() => {
     if (filter.filters.filterByNumericValues.length > 0) {
       setColumnArray(JSON.stringify(filter.filters.filterByNumericValues));
     }
   }, [filter.filters.filterByNumericValues]);
-
-  console.log(columnArray);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +32,17 @@ const SearchBar = () => {
     setFilter({ filters: {
       ...filter.filters,
       filterByNumericValues: arrayFilters.concat(newObject),
+    } });
+  };
+
+  const handleSubmitOrd = (e) => {
+    e.preventDefault();
+    setFilter({ filters: {
+      ...filter.filters,
+      sort: {
+        column: columnOrd,
+        sort: orderRadio,
+      },
     } });
   };
 
@@ -90,6 +101,50 @@ const SearchBar = () => {
           data-testid="button-filter"
         >
           Filtrar
+        </button>
+      </form>
+      <form onSubmit={ (e) => handleSubmitOrd(e) }>
+        <select
+          name="column-sort"
+          id="column-sort"
+          data-testid="column-sort"
+          value={ columnOrd }
+          onChange={ ({ target }) => { setColumnOrd(target.value); } }
+        >
+          <option value="population">population</option>
+          <option value="orbital_period">orbital_period</option>
+          <option value="diameter">diameter</option>
+          <option value="rotation_period">rotation_period</option>
+          <option value="surface_water">surface_water</option>
+        </select>
+        <label htmlFor="asc">
+          <input
+            type="radio"
+            id="asc"
+            name="order_radio"
+            value="ASC"
+            defaultChecked
+            data-testid="column-sort-input-asc"
+            onClick={ () => { setOrderRadio('ASC'); } }
+          />
+          ASC
+        </label>
+        <label htmlFor="desc">
+          <input
+            type="radio"
+            id="desc"
+            name="order_radio"
+            value="DESC"
+            data-testid="column-sort-input-desc"
+            onClick={ () => { setOrderRadio('DESC'); } }
+          />
+          DESC
+        </label>
+        <button
+          type="submit"
+          data-testid="column-sort-button"
+        >
+          Sort
         </button>
       </form>
     </div>

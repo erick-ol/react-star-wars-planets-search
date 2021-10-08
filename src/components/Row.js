@@ -5,14 +5,41 @@ const Row = () => {
   const [filteredPlanets, setFilteredPlanets] = useState(null);
   const { filter, planets } = useContext(GlobalContext);
   const { name } = filter.filters.filterByName;
-  const { filterByNumericValues: filterNum } = filter.filters;
+  const { filterByNumericValues: filterNum, order } = filter.filters;
+
+  useEffect(() => {
+    if (planets) {
+      if (order.sort === 'ASC') {
+        if (order.column === 'name') {
+          setFilteredPlanets(
+            planets.sort((a, b) => a[order.column].localeCompare(b[order.column])),
+          );
+        } else {
+          setFilteredPlanets(
+            planets.sort((a, b) => a[order.column] - b[order.column]),
+          );
+        }
+      }
+      if (order.sort === 'DESC') {
+        if (order.column === 'name') {
+          setFilteredPlanets(
+            planets.sort((a, b) => b[order.column].localeCompare(a[order.column])),
+          );
+        } else {
+          setFilteredPlanets(
+            planets.sort((a, b) => b[order.column] - a[order.column]),
+          );
+        }
+      }
+    }
+  }, [order, planets]);
 
   useEffect(() => {
     if (planets) {
       const aux = planets.filter((planet) => planet.name.includes(name));
       setFilteredPlanets(aux);
     }
-  }, [planets, name]);
+  }, [planets, name, filterNum]);
 
   useEffect(() => {
     if (filterNum.length > 0) {
@@ -40,7 +67,7 @@ const Row = () => {
       });
       setFilteredPlanets(aux);
     }
-  }, [filterNum]);
+  }, [filterNum, planets]);
 
   return (
     <>
@@ -60,7 +87,7 @@ const Row = () => {
         } = planet;
         return (
           <tr key={ index }>
-            <td>{planetName}</td>
+            <td data-testid="planet-name">{planetName}</td>
             <td>{rotationPeriod}</td>
             <td>{orbitalPeriod}</td>
             <td>{diameter}</td>
